@@ -71,3 +71,22 @@ tarefas.forEach(tarefa => {
     ulTarefas.append(elementoTarefa);
 });
 
+//Após criar o paragrafo
+const paragrafo = document.createElement('p');
+paragrafo.textContent = 'Descricao da tarefa';
+paragrafo.classList.add('app__section-task-list-item-description');
+
+//Apos criar o botao
+const botao = document.createElement('botao');
+botao.textContent = 'Editar';
+botao.classList.add('app_button-edit');
+
+// Carregando e exibindo tarefas do localStorage ao carregar a página
+document.addEventListener('DOMContentLoaded', function() {
+  const tarefasSalvas = JSON.parse(localStorage.getItem('tarefas')) || [];
+  tarefasSalvas.forEach(tarefa => {
+      const elementoTarefa = criarElementoTarefa(tarefa);
+      ulTarefas.append(elementoTarefa);
+  });
+});
+
