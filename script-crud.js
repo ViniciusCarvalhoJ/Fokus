@@ -2,8 +2,15 @@ const btnAdicionarTarefa = document.querySelector(".app__button--add-task");
 const formAdicionarTarefa = document.querySelector(".app__form-add-task");
 const textArea = document.querySelector(".app__form-textarea");
 const ulTarefas = document.querySelector(".app__section-task-list");
-
 const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
+const btnCancelar  = document.querySelector(".app__form-footer__button--cancel");
+
+
+//! Armazenar informações no armazenamento local do navegador.
+function atualizarTarefas() {
+   //! Convertendo o array para uma string em formato JSON para poder armazenar.
+   localStorage.setItem("tarefas", JSON.stringify(tarefas));
+}
 
 function criarElementoTarefa(tarefa) {
   const li = document.createElement("li");
@@ -24,6 +31,24 @@ function criarElementoTarefa(tarefa) {
    const botao = document.createElement('button');
    botao.classList.add('app_button-edit');
 
+
+   /*
+    == Função que permite a inserção de um novo nome para a tarefa, atualiza a descrição da tarefa,
+    == e em seguida, atualiza a exibição das tarefas na interface do usuario.
+   */
+    botao.onclick = () => {
+      
+      const novaDescricao = prompt("Qual o novo nome da tarefa?");
+      console.log("nova descricao: ", novaDescricao);
+      //-> Tratamento de erro, para verificar se está null, vazio;
+      if(novaDescricao){
+          paragrafo.textContent = novaDescricao;
+          tarefa.descricao = novaDescricao;
+          atualizarTarefas();
+      }
+
+    }
+
    const imagemBotao = document.createElement('img');
    imagemBotao.setAttribute('src', '/imagens/edit.png');
 
@@ -38,50 +63,57 @@ function criarElementoTarefa(tarefa) {
 }
 
 /* 
-Aparecer formulario quando usuario clicar no botão adicionar nova tarefa
+->Aparecer formulario quando usuario clicar no botão adicionar nova tarefa
 */
-btnAdicionarTarefa.addEventListener("click", () => {
-  formAdicionarTarefa.classList.toggle("hidden");
+btnAdicionarTarefa.addEventListener('click', () => {
+  formAdicionarTarefa.classList.toggle('hidden')
 });
 
-//Ouvindo o evento de 'submit' do nosso formulario
+//!Ouvindo o evento de 'submit' do nosso formulario
 formAdicionarTarefa.addEventListener("submit", (evento) => {
  
-  //Evita que a pagina recarregue(Comportamento default)
+  //*Evita que a pagina recarregue(Comportamento default)
   evento.preventDefault();
  
-  //Criação do objeto tarefa com a descrição vinda da nossa textarea.
+  //!Criação do objeto tarefa com a descrição vinda da nossa textarea.
   const tarefa = {
     descricao: textArea.value,
   };
-  
+
   tarefas.push(tarefa);
   const elementoTarefa = criarElementoTarefa(tarefa);
   ulTarefas.append(elementoTarefa);
-  // Convertendo o array para uma string em formato JSON para poder armazenar.
-  localStorage.setItem("tarefas", JSON.stringify(tarefas));
-
+  atualizarTarefas();
   textArea.value = '';
   formAdicionarTarefa.classList.add('hidden');
 
 });
+
+//! Função para limpar o formulario
+const limparFormulario = () =>  {
+    textArea.value = '';
+    limparFormulario.classList.add('hidden');
+
+};
+//!Vinculando ao botao cancelar
+btnCancelar.addEventListener('click', limparFormulario);
 
 tarefas.forEach(tarefa => {
     const elementoTarefa = criarElementoTarefa(tarefa);
     ulTarefas.append(elementoTarefa);
 });
 
-//Após criar o paragrafo
+//!Após criar o paragrafo
 const paragrafo = document.createElement('p');
 paragrafo.textContent = 'Descricao da tarefa';
 paragrafo.classList.add('app__section-task-list-item-description');
 
-//Apos criar o botao
+//!Apos criar o botao
 const botao = document.createElement('botao');
 botao.textContent = 'Editar';
 botao.classList.add('app_button-edit');
 
-// Carregando e exibindo tarefas do localStorage ao carregar a página
+//!Carregando e exibindo tarefas do localStorage ao carregar a página
 document.addEventListener('DOMContentLoaded', function() {
   const tarefasSalvas = JSON.parse(localStorage.getItem('tarefas')) || [];
   tarefasSalvas.forEach(tarefa => {
@@ -89,4 +121,3 @@ document.addEventListener('DOMContentLoaded', function() {
       ulTarefas.append(elementoTarefa);
   });
 });
-
