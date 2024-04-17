@@ -4,7 +4,8 @@ const textArea = document.querySelector(".app__form-textarea");
 const ulTarefas = document.querySelector(".app__section-task-list");
 const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
 const btnCancelar  = document.querySelector(".app__form-footer__button--cancel");
-
+const paragrafoDescricaoTarefa = document.querySelector(".app__section-active-task-description");
+let tarefaSelecionada = null;
 
 //! Armazenar informações no armazenamento local do navegador.
 function atualizarTarefas() {
@@ -33,17 +34,21 @@ function criarElementoTarefa(tarefa) {
 
 
    /*
-    == Função que permite a inserção de um novo nome para a tarefa, atualiza a descrição da tarefa,
-    == e em seguida, atualiza a exibição das tarefas na interface do usuario.
+    | Função que permite a inserção de um novo nome para a tarefa, atualiza a descrição da tarefa,
+    | e em seguida, atualiza a exibição das tarefas na interface do usuario.
    */
     botao.onclick = () => {
-      
+      //debugger
+      //!Evento de clique adicionado ao botão de edição
       const novaDescricao = prompt("Qual o novo nome da tarefa?");
-      console.log("nova descricao: ", novaDescricao);
+      //console.log("nova descricao: ", novaDescricao);
       //-> Tratamento de erro, para verificar se está null, vazio;
       if(novaDescricao){
+          //!Atualiza o conteúdo textual do parágrafo com a nova descrição
           paragrafo.textContent = novaDescricao;
+          //!Atualiza a descrição da tarefa na lista de tarefas
           tarefa.descricao = novaDescricao;
+          //!Chama a função para atualizar as tarefas no localStorage
           atualizarTarefas();
       }
 
@@ -51,12 +56,21 @@ function criarElementoTarefa(tarefa) {
 
    const imagemBotao = document.createElement('img');
    imagemBotao.setAttribute('src', '/imagens/edit.png');
-
    botao.append(imagemBotao);
 
    li.append(svg);
    li.append(paragrafo);
    li.append(botao);
+
+   li.onclick = () => {
+    paragrafoDescricaoTarefa.textContent = tarefa.descricao;
+    document.querySelectorAll('.app__section-task-list-item-active')
+            .forEach(elemento => {
+                elemento.classList.remove('app__section-task-list-item-active');
+      })
+    li.classList.add('app__section-task-list-item-active');
+
+   }
 
    return(li);
 
@@ -72,7 +86,7 @@ btnAdicionarTarefa.addEventListener('click', () => {
 //!Ouvindo o evento de 'submit' do nosso formulario
 formAdicionarTarefa.addEventListener("submit", (evento) => {
  
-  //*Evita que a pagina recarregue(Comportamento default)
+  //->Evita que a pagina recarregue(Comportamento default)
   evento.preventDefault();
  
   //!Criação do objeto tarefa com a descrição vinda da nossa textarea.

@@ -60,11 +60,9 @@ longoBt.addEventListener("click", () => {
   longoBt.classList.add("active");
 });
 
-
-
 function alterarContexto(contexto) {
   mostrarTempo();
-  //Removendo o background dos botoes
+  //|Removendo o background dos botoes
   botoes.forEach(function (contexto) {
     contexto.classList.remove("active");
   });
@@ -90,7 +88,7 @@ function alterarContexto(contexto) {
   }
 }
 
-// Função de contagem regressiva
+// !Função de contagem regressiva
 const contagemRegressiva = () => {
   if (tempoDecorridoEmSegundos <= 0) {
     audioTempoFinalizado.play();
@@ -105,7 +103,7 @@ const contagemRegressiva = () => {
 
 startPauseBt.addEventListener("click", iniciarOuPausar);
 
-// Função para iniciar ou pausar o temporizador
+//!Função para iniciar ou pausar o temporizador
 function iniciarOuPausar() {
   if (intervaloId) {
     audioPausar.play(); // Toca o áudio de pausa
