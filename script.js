@@ -112,9 +112,9 @@ startPauseBt.addEventListener("click", iniciarOuPausar);
 //!Função para iniciar ou pausar o temporizador
 function iniciarOuPausar() {
   if (intervaloId) {
-    audioPausar.play(); // Toca o áudio de pausa
+    audioPausar.play(); //Toca o áudio de pausa
     zerar();
-    return; // Retorna imediatamente se já estiver em andamento
+    return; //Retorna imediatamente se já estiver em andamento
   }
   audioPlay.play(); // Toca o áudio de play
   intervaloId = setInterval(contagemRegressiva, 1000);
