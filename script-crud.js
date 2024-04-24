@@ -3,10 +3,11 @@ const formAdicionarTarefa = document.querySelector(".app__form-add-task");
 const textArea = document.querySelector(".app__form-textarea");
 const ulTarefas = document.querySelector(".app__section-task-list");
 const btnCancelar = document.querySelector(".app__form-footer__button--cancel");
-const paragrafoDescricaoTarefa = document.querySelector(
-  ".app__section-active-task-description"
-);
-const tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
+const btnRemoverConcluidas = document.querySelector("#btn-remover-concluidas");
+const btnRemoverTodas = document.querySelector("#btn-remover-todas");
+
+const paragrafoDescricaoTarefa = document.querySelector(".app__section-active-task-description");
+let tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 
 let tarefaSelecionada = null;
 let liTarefaSelecionada = null;
@@ -65,7 +66,7 @@ function criarElementoTarefa(tarefa) {
   li.append(paragrafo);
   li.append(botao);
 
-  //!Mantendo a task completa salva no localstorage e desabilitando a edição, após concluida.
+  //!Mantendo a task completa salva no localstorage e desabilitando butao de edicao, após concluida.
   if (tarefa.completa) {
     li.classList.add('app__section-task-list-item-complete');
     botao.setAttribute('disabled', 'disabled');
@@ -95,14 +96,6 @@ function criarElementoTarefa(tarefa) {
   return li;
 }
 
-/* const apagarTarefa = () => {
-  btnDeletar.onclick = () => {
-    document.querySelectorAll('.app__form-footer__button app__form-footer__button--delete')
-            .forEach(elemento => {
-                elemento.classList.remove('app__form-footer__button app__form-footer__button--delete');
-      })
-}
-*/
 /* 
 ->Aparecer formulario quando usuario clicar no botão adicionar nova tarefa
 */
@@ -173,3 +166,23 @@ document.addEventListener('FocoFinalizado', () => {
 
   }
 });
+
+//-> Função para remover tarefas completas ou todas as tarefas
+const removerTarefas = (somenteCompletas) => {
+  //|Determina o seletor com base no parâmetro somenteCompletas
+    const seletor = somenteCompletas ? ".app__section-task-list-item-complete" : ".app__section-task-list-item";
+    //#Seleciona todos os elementos com o seletor especificado
+    document.querySelectorAll(seletor).forEach(elemento => {
+        //#Remove cada elemento encontrado
+        elemento.remove();
+
+    })
+
+    //|Atualiza o array de tarefas: remove tarefas completas se somenteCompletas for verdadeiro,
+    //| caso contrário, remove todas as tarefas
+    tarefas = somenteCompletas ? tarefas.filter(tarefa => !tarefa.completa) : [];
+    atualizarTarefas()
+}
+
+btnRemoverConcluidas.onclick = () => removerTarefas(true);
+btnRemoverTodas.onclick = () => removerTarefas(false);
